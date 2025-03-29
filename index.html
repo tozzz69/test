@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Team Check-In Chatbot</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .chatbox {
+      width: 400px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 20px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .message {
+      margin: 10px 0;
+    }
+    .bot {
+      color: #444;
+    }
+    .user {
+      text-align: right;
+      color: #0078d4;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="chatbox" id="chatbox">
+    <div class="message bot">Hi there! Quick check-in for the week. Ready?</div>
+  </div>
+  <script>
+    const chatbox = document.getElementById('chatbox');
+    const questions = [
+      "1️⃣ What did you work on this week?",
+      "2️⃣ Any blockers or challenges?",
+      "3️⃣ What are your top 3 goals for next week?",
+    ];
+    let answers = [];
+    let step = 0;
+
+    function addMessage(text, sender) {
+      const msg = document.createElement('div');
+      msg.className = `message ${sender}`;
+      msg.textContent = text;
+      chatbox.appendChild(msg);
+      chatbox.scrollTop = chatbox.scrollHeight;
+    }
+
+    function askNextQuestion() {
+      if (step < questions.length) {
+        addMessage(questions[step], 'bot');
+        addInput();
+      } else {
+        addMessage("✅ Thanks! Summary will be shared with your manager.", 'bot');
+        console.log("Collected answers:", answers);
+      }
+    }
+
+    function addInput() {
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.placeholder = 'Type your answer and press Enter';
+      input.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' && input.value.trim() !== '') {
+          const response = input.value.trim();
+          addMessage(response, 'user');
+          answers.push(response);
+          chatbox.removeChild(input);
+          step++;
+          setTimeout(askNextQuestion, 500);
+        }
+      });
+      chatbox.appendChild(input);
+      input.focus();
+    }
+
+    // Start the flow
+    setTimeout(askNextQuestion, 1000);
+  </script>
+</body>
+</html>
