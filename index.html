@@ -70,7 +70,7 @@
         addInput();
       } else {
         addMessage("✅ Thanks! Summary will be shared with your manager.", 'bot');
-        console.log("Collected answers:", answers);
+        sendToSheetDB();
       }
     }
 
@@ -90,6 +90,32 @@
       });
       chatbox.appendChild(input);
       input.focus();
+    }
+
+    function sendToSheetDB() {
+      const data = {
+        data: {
+          question1: answers[0] || '',
+          question2: answers[1] || '',
+          question3: answers[2] || ''
+        }
+      };
+
+      fetch("https://sheetdb.io/api/v1/fmvdoaue94obm", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      })
+      .then(res => {
+        if (res.ok) {
+          console.log("✅ Data sent to Google Sheets!");
+        } else {
+          console.error("❌ Failed to send data.");
+        }
+      })
+      .catch(err => console.error("❌ Error:", err));
     }
 
     // Start the flow
