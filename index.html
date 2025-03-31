@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Commerzbank Team Check-In</title>
+  <title>Friday Mood Check – Let’s wrap up the week! 🌟</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -81,7 +81,7 @@
 <body>
   <header>
     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Commerzbank_2019_logo.svg/2560px-Commerzbank_2019_logo.svg.png" alt="Commerzbank Logo">
-    <h1>Team Weekly Check-In</h1>
+    <h1>Friday Mood Check – Let’s wrap up the week! 🌟</h1>
   </header>
 
   <div class="container">
@@ -91,14 +91,16 @@
   <script>
     const chatbox = document.getElementById('chatbox');
     const questions = [
-      "1️⃣ What did you work on this week?",
-      "2️⃣ Any blockers or challenges?",
-      "3️⃣ What are your top 3 goals for next week?",
+      "1️⃣ On a scale from 😩 1 to 😊 5, how was your week? (Reply with a number from 1 to 5)",
+      "2️⃣ What’s one word to describe how you’re feeling today? (Just one word is fine!)",
+      "3️⃣ Did you feel supported by the team this week? (Yes / Kind of / Not really)",
+      "4️⃣ Anything frustrating or blocking your work right now? (Feel free to share, or say 'All good')",
+      "5️⃣ Want to shout out a teammate or celebrate something from this week? (Drop it here! Big or small wins welcome 🎉)"
     ];
     let answers = [];
     let step = 0;
 
-    const alreadySubmitted = localStorage.getItem('commerzbank_checkin_submitted');
+    const alreadySubmitted = localStorage.getItem('commerzbank_mood_check_submitted');
 
     function addMessage(text, sender) {
       const msg = document.createElement('div');
@@ -113,8 +115,8 @@
         addMessage(questions[step], 'bot');
         addInput();
       } else {
-        addMessage("✅ Thanks! Your check-in has been submitted.", 'bot');
-        localStorage.setItem('commerzbank_checkin_submitted', 'true');
+        addMessage("✅ Thanks! Your mood check has been submitted.", 'bot');
+        localStorage.setItem('commerzbank_mood_check_submitted', 'true');
         sendToSheetDB();
       }
     }
@@ -138,11 +140,16 @@
     }
 
     function sendToSheetDB() {
+      const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+
       const data = {
         data: {
-          question1: answers[0] || '',
-          question2: answers[1] || '',
-          question3: answers[2] || ''
+          date: today,
+          q1: answers[0] || '',
+          q2: answers[1] || '',
+          q3: answers[2] || '',
+          q4: answers[3] || '',
+          q5: answers[4] || ''
         }
       };
 
@@ -164,13 +171,13 @@
     }
 
     function showAlreadySubmittedMessage() {
-      addMessage("✅ You've already submitted this week's check-in. Thank you!", 'bot');
+      addMessage("✅ You've already submitted today's mood check. Thank you!", 'bot');
     }
 
     if (alreadySubmitted) {
       showAlreadySubmittedMessage();
     } else {
-      addMessage("Hi there! Quick check-in for the week. Ready?", 'bot');
+      addMessage("Hi there! Let’s wrap up the week with a quick Friday Mood Check. 🌟", 'bot');
       setTimeout(askNextQuestion, 1000);
     }
   </script>
